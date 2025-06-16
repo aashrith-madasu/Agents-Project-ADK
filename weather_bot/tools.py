@@ -30,9 +30,6 @@ def get_weather(city: str) -> dict:
         return {"status": "error", "error_message": f"Sorry, I don't have weather information for '{city}'."}
     
 
-# Ensure 'get_weather' from Step 1 is available if running this step independently.
-# def get_weather(city: str) -> dict: ... (from Step 1)
-
 def say_hello(name: Optional[str] = None) -> str:
     """Provides a simple greeting. If a name is provided, it will be used.
 
@@ -49,6 +46,7 @@ def say_hello(name: Optional[str] = None) -> str:
         greeting = "Hello there!" # Default greeting if name is None or not explicitly passed
         print(f"--- Tool: say_hello called without a specific name (name_arg_value: {name}) ---")
     return greeting
+
 
 def say_goodbye() -> str:
     """Provides a simple farewell message to conclude the conversation."""
