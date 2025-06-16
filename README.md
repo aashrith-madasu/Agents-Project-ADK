@@ -19,5 +19,5 @@ adk web
 
 ## To run the weather bot
 ```
-python weather_bot/agent.py
+python weather_bot/run.py
 ```
