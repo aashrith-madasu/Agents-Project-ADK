@@ -6,6 +6,7 @@ from google.adk.models.llm_request import LlmRequest
 from google.adk.models.llm_response import LlmResponse
 from google.genai import types
 from typing import Optional, Dict, Any
+import copy
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -58,6 +59,7 @@ def block_keyword_guardrail(
     if llm_request.contents:
         # Find the most recent message with role 'user'
         for content in reversed(llm_request.contents):
+            print(f"--- Callback: Printing llm request content: {content.model_dump()} ---")
             if content.role == 'user' and content.parts:
                 # Assuming text is in the first part for simplicity
                 if content.parts[0].text:
@@ -130,6 +132,36 @@ def block_paris_tool_guardrail(
     return None # Returning None allows the actual tool function to run
 
 
+
+def simple_after_model_modifier(
+    callback_context: CallbackContext, llm_response: LlmResponse
+) -> Optional[LlmResponse]:
+    """Inspects/modifies the LLM response after it's received."""
+    agent_name = callback_context.agent_name
+    print(f"[Callback] After model call for agent: {agent_name}")
+
+    # --- Inspection ---
+    original_text = ""
+    if llm_response.content and llm_response.content.parts:
+        # Assuming simple text response for this example
+        if llm_response.content.parts[0].text:
+            original_text = llm_response.content.parts[0].text
+            print(f"[Callback] Inspected original response text: '{original_text[:100]}...'") # Log snippet
+        elif llm_response.content.parts[0].function_call:
+             print(f"[Callback] Inspected response: Contains function call '{llm_response.content.parts[0].function_call.name}'. No text modification.")
+             return None # Don't modify tool calls in this example
+        else:
+             print("[Callback] Inspected response: No text content found.")
+             return None
+    elif llm_response.error_message:
+        print(f"[Callback] Inspected response: Contains error '{llm_response.error_message}'. No modification.")
+        return None
+    else:
+        print("[Callback] Inspected response: Empty LlmResponse.")
+        return None # Nothing to modify
+
+    
+
 weather_agent_team = Agent(
     name="weather_agent_v2",
     model=AGENT_MODEL,
@@ -139,7 +171,8 @@ weather_agent_team = Agent(
     sub_agents=[greeting_agent, farewell_agent],
     output_key="last_weather_report",
     before_model_callback=block_keyword_guardrail,
-    before_tool_callback=block_paris_tool_guardrail
+    before_tool_callback=block_paris_tool_guardrail,
+    after_model_callback=simple_after_model_modifier
 )
 
 
