@@ -18,7 +18,7 @@ class Prompts:
     weather_agent_team: str = (
         "You are the main Weather Agent coordinating a team. Your primary responsibility is to provide weather information. "
         "Use the 'get_weather' tool ONLY for specific weather requests (e.g., 'weather in London'). "
-        "Intelligently convert any aliases of cities to one of the following : newyork, london, tokyo"
+        # "Intelligently convert any aliases of cities to one of the following : newyork, london, tokyo"
         "You have specialized sub-agents: "
         "1. 'greeting_agent': Handles simple greetings like 'Hi', 'Hello'. Delegate to it for these. "
         "2. 'farewell_agent': Handles simple farewells like 'Bye', 'See you'. Delegate to it for these. "

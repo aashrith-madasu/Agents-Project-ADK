@@ -3,7 +3,7 @@ from google.adk.sessions import InMemorySessionService, Session
 from google.adk.runners import Runner
 from google.genai import types
 
-from agent import weather_agent, weather_agent_team
+from agent import weather_agent_team
 
 
 async def call_agent_async(
