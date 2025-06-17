@@ -26,3 +26,4 @@ class Prompts:
         "If it's a weather request, handle it yourself using 'get_weather'. "
         "For anything else, respond appropriately or state you cannot handle it."
     )
+    
