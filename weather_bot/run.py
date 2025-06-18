@@ -3,7 +3,7 @@ from google.adk.sessions import InMemorySessionService, Session
 from google.adk.runners import Runner
 from google.genai import types
 
-from agent import weather_agent_team
+from weather_bot.agent import root_agent
 
 
 async def call_agent_async(
@@ -50,7 +50,7 @@ async def run_team_conversation():
     )
 
     runner = Runner(
-        agent=weather_agent_team ,
+        agent=root_agent ,
         app_name=APP_NAME,
         session_service=session_service
     )
