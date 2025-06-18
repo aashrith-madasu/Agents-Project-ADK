@@ -6,20 +6,19 @@ from google.adk.models.llm_request import LlmRequest
 from google.adk.models.llm_response import LlmResponse
 from google.genai import types
 from typing import Optional, Dict, Any
+from dotenv import load_dotenv
+import warnings
+import logging
 import copy
 
-from dotenv import load_dotenv
-load_dotenv()
-import warnings
-warnings.filterwarnings("ignore") # Ignore all warnings
-import logging
-logging.basicConfig(level=logging.ERROR)
-
-from tools import (
-    say_hello, say_goodbye, get_weather_stateful
-)
+from tools import say_hello, say_goodbye, get_weather_stateful
 from utils import Prompts
+from rag import retrieve_external_knowledge
 
+
+load_dotenv()
+warnings.filterwarnings("ignore") # Ignore all warnings
+logging.basicConfig(level=logging.ERROR)
 
 AGENT_MODEL = 'gemini-2.0-flash' 
 
@@ -167,7 +166,7 @@ weather_agent_team = Agent(
     model=AGENT_MODEL,
     description="The main coordinator agent. Handles weather requests and delegates greetings/farewells to specialists.",
     instruction=Prompts.weather_agent_team,
-    tools=[get_weather_stateful],
+    tools=[get_weather_stateful, retrieve_external_knowledge],
     sub_agents=[greeting_agent, farewell_agent],
     output_key="last_weather_report",
     before_model_callback=block_keyword_guardrail,
