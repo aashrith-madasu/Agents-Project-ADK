@@ -6,40 +6,36 @@ from google.adk.models.llm_request import LlmRequest
 from google.adk.models.llm_response import LlmResponse
 from google.genai import types
 from typing import Optional, Dict, Any
-from dotenv import load_dotenv
-import warnings
-import logging
+# from dotenv import load_dotenv
+# import warnings
+# import logging
 
-# from .tools import say_hello, say_goodbye, get_weather_stateful
-# from .utils import Prompts
-# from .rag import retrieve_external_knowledge
+from .tools import say_hello, say_goodbye, get_weather_stateful
+from .utils import Prompts
+from .rag import retrieve_external_knowledge
 
-
-load_dotenv()
-warnings.filterwarnings("ignore") # Ignore all warnings
-logging.basicConfig(level=logging.ERROR)
 
 AGENT_MODEL = 'gemini-2.0-flash' 
 
 
-# # --- Greeting Agent ---
-# greeting_agent = Agent(
-#     name="greeting_agent",
-#     model = AGENT_MODEL,
-#     description="Handles simple greetings and hellos using the 'say_hello' tool.", # Crucial for delegation
-#     instruction=Prompts.greeting_agent,
-#     tools=[say_hello],
-# )
+# --- Greeting Agent ---
+greeting_agent = Agent(
+    name="greeting_agent",
+    model = AGENT_MODEL,
+    description="Handles simple greetings and hellos using the 'say_hello' tool.", # Crucial for delegation
+    instruction=Prompts.greeting_agent,
+    tools=[say_hello],
+)
 
 
-# # --- Farewell Agent ---
-# farewell_agent = Agent(
-#     name="farewell_agent",
-#     model=AGENT_MODEL,
-#     description="Handles simple farewells and goodbyes using the 'say_goodbye' tool.", # Crucial for delegation
-#     instruction=Prompts.farewell_agent,
-#     tools=[say_goodbye],
-# )
+# --- Farewell Agent ---
+farewell_agent = Agent(
+    name="farewell_agent",
+    model=AGENT_MODEL,
+    description="Handles simple farewells and goodbyes using the 'say_goodbye' tool.", # Crucial for delegation
+    instruction=Prompts.farewell_agent,
+    tools=[say_goodbye],
+)
 
 
 def block_keyword_guardrail(
@@ -103,7 +99,7 @@ def block_paris_tool_guardrail(
 
     # --- Guardrail Logic ---
     target_tool_name = "get_weather_stateful" # Match the function name used by FunctionTool
-    blocked_city = "paris"
+    blocked_city = "tokyo"
 
     # Check if it's the correct tool and the city argument matches the blocked city
     if tool_name == target_tool_name:
@@ -161,13 +157,13 @@ def simple_after_model_modifier(
     
 
 root_agent = Agent(
-    name="weather_agent_v2",
+    name="weather_bot",
     model=AGENT_MODEL,
     description="The main coordinator agent. Handles weather requests and delegates greetings/farewells to specialists.",
-    instruction="you are a helpful assistant",
-    # instruction=Prompts.weather_agent_team,
-    # tools=[get_weather_stateful, retrieve_external_knowledge],
-    # sub_agents=[greeting_agent, farewell_agent],
+    # instruction="you are a helpful assistant",
+    instruction=Prompts.weather_agent_team,
+    tools=[get_weather_stateful, retrieve_external_knowledge],
+    sub_agents=[greeting_agent, farewell_agent],
     output_key="last_weather_report",
     before_model_callback=block_keyword_guardrail,
     before_tool_callback=block_paris_tool_guardrail,

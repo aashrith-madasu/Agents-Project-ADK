@@ -2,5 +2,6 @@ google-adk[database]
 google-generativeai
 litellm
 python-dotenv
-weaviate-client
+psutil
+weaviate-client==4.15.1
 
