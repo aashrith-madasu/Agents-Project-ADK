@@ -1,7 +1,5 @@
-google-adk[database]
-google-generativeai
-litellm
-python-dotenv
-psutil
-weaviate-client==4.15.1
+google-adk
+google-generativeai==0.8.5
+python-dotenv==1.1.0
+uvicorn
 
