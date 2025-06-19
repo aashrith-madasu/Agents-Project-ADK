@@ -10,9 +10,10 @@ from typing import Optional, Dict, Any
 # import warnings
 # import logging
 
+
 from .tools import say_hello, say_goodbye, get_weather_stateful
 from .utils import Prompts
-# from .rag import retrieve_external_knowledge
+from .rag import retrieve_external_knowledge
 
 
 AGENT_MODEL = 'gemini-2.0-flash' 
@@ -162,7 +163,7 @@ root_agent = Agent(
     description="The main coordinator agent. Handles weather requests and delegates greetings/farewells to specialists.",
     # instruction="you are a helpful assistant",
     instruction=Prompts.weather_agent_team,
-    tools=[get_weather_stateful],
+    tools=[get_weather_stateful, retrieve_external_knowledge],
     sub_agents=[greeting_agent, farewell_agent],
     output_key="last_weather_report",
     before_model_callback=block_keyword_guardrail,

@@ -3,7 +3,7 @@ from google.adk.sessions import InMemorySessionService, Session
 from google.adk.runners import Runner
 from google.genai import types
 
-from weather_bot.agent import root_agent
+from .agent import root_agent
 
 
 async def call_agent_async(
@@ -44,10 +44,13 @@ async def run_team_conversation():
         "user_preference_temperature_unit": "Celsius"
     }
     
-    session_service.create_session(
+    session = await session_service.create_session(
         app_name=APP_NAME, user_id=USER_ID, session_id=SESSION_ID,
         state=initial_state
     )
+    
+    if not session:
+        raise Exception("Session not created")
 
     runner = Runner(
         agent=root_agent ,

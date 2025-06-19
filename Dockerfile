@@ -2,7 +2,9 @@ FROM python:3.13-slim
 WORKDIR /app
 
 COPY requirements.txt .
+COPY requirements2.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements2.txt
 
 RUN adduser --disabled-password --gecos "" myuser && \
     chown -R myuser:myuser /app
