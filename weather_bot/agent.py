@@ -16,7 +16,7 @@ from .utils import Prompts
 from .rag import retrieve_external_knowledge
 
 
-AGENT_MODEL = 'gemini-2.0-flash' 
+AGENT_MODEL = "gemini-2.0-flash"
 
 
 # --- Greeting Agent ---
